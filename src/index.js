@@ -18,9 +18,9 @@ class WebpackBuildInfo {
         if (basename === this.entryName) {
           console.log(`\n adding inject to ${this.entryName}...`);
           this.createCodeInject((code) => {
-            console.log(code);
             const newSource = code + asset.source();
             asset.source = () => newSource;
+            console.log(asset.source());
 
             console.log('done\n');
             cb();
@@ -60,6 +60,7 @@ class WebpackBuildInfo {
         console.log(LastCommitHash: window.__buildInfo.lastCommitHash);
         console.log('#############################################');
       }
+      window.showBuild();
     })();`
   }
 }
