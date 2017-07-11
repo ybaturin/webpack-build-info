@@ -9,3 +9,5 @@ class WebpackBuildInfo {
     });
   }
 }
+
+export default WebpackBuildInfo;
