@@ -13,7 +13,7 @@ class WebpackBuildInfo {
     }
 
     compiler.plugin('emit', (compilation, done) => {
-      let found = fase;
+      let found = false;
       for (let basename in compilation.assets) {
         let asset = compilation.assets[basename];
         if (basename === this.entryName) {
