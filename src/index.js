@@ -10,7 +10,7 @@ class WebpackBuildInfo {
   }
 
   apply(compiler) {
-    if (!this.disabled) {
+    if (this.disabled) {
       return;
     }
 
