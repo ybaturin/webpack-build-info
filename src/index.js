@@ -6,10 +6,11 @@ moment.locale('ru');
 class WebpackBuildInfo {
   constructor(options = {}) {
     this.entryName = options.entryName ? options.entryName + '.js' : '';
+    this.disabled = options.disabled || false;
   }
 
   apply(compiler) {
-    if (!this.entryName) {
+    if (!this.entryName || this.disabled) {
       return;
     }
 
