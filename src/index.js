@@ -12,24 +12,25 @@ class WebpackBuildInfo {
       return;
     }
 
-    compiler.plugin('emit', (compilation, cb) => {
+    compiler.plugin('emit', (compilation, done) => {
+      let found = fase;
       for (let basename in compilation.assets) {
         let asset = compilation.assets[basename];
         if (basename === this.entryName) {
-          console.log(`\n adding inject to ${this.entryName}...`);
+          found = true;
+          console.log(`\n adding build info to ${this.entryName}...`);
           this.createCodeInject((code) => {
             const newSource = code + asset.source();
             asset.source = () => newSource;
-            console.log(asset.source());
-
             console.log('done\n');
-            cb();
+            done();
           })
-        } else {
-          cb();
         }
       }
-      cb();
+
+      if (!found) {
+        done();
+      }
     });
   }
 
@@ -37,6 +38,7 @@ class WebpackBuildInfo {
     const buildTime = moment().format('D.MM.YYYY HH:mm:ss');
     git.getLastCommit((err, commit) => {
       if (err) {
+        cb('');
         return console.error('Webpack-build-info: can\'t get last commit info', err);
       }
 
