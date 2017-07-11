@@ -17,6 +17,7 @@ class WebpackBuildInfo {
     compiler.plugin('emit', (compilation, done) => {
       let found = false;
       for (let basename in compilation.assets) {
+        console.log('\n' + basename + '\n');
         let asset = compilation.assets[basename];
         if (basename === this.entryName) {
           found = true;
