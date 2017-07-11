@@ -35,7 +35,7 @@ class WebpackBuildInfo {
   }
 
   createCodeInject(cb) {
-    const buildTime = moment().format('D.MM.YYYY HH:mm:ss');
+    const buildTime = moment().format('HH:mm:ss D MMM YYYY ');
     git.getLastCommit((err, commit) => {
       if (err) {
         cb('');
@@ -56,11 +56,11 @@ class WebpackBuildInfo {
     return `(function(){
       window.__buildInfo = ${JSON.stringify(buildInfo)};
       window.showBuild = function() {
-        console.log('#############################################');
+        console.log('--------------------------------------------------------------');
         console.log('BuildTime: ', window.__buildInfo.buildTime);
         console.log('Branch: ', window.__buildInfo.branch);
         console.log('LastCommitHash: ', window.__buildInfo.lastCommitHash);
-        console.log('#############################################');
+        console.log('--------------------------------------------------------------');
       }
       window.showBuild();
     })();`
