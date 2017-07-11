@@ -5,27 +5,27 @@ moment.locale('ru');
 
 class WebpackBuildInfo {
   constructor(options = {}) {
-    this.entryName = options.entryName ? options.entryName + '.js' : '';
+    this.entryName = options.entryName;
     this.disabled = options.disabled || false;
   }
 
   apply(compiler) {
-    if (!this.entryName || this.disabled) {
+    if (!this.disabled) {
       return;
     }
 
     compiler.plugin('emit', (compilation, done) => {
       let found = false;
       for (let basename in compilation.assets) {
-        console.log('\n' + basename + '\n');
+        const ext = path.extname(basename);
         let asset = compilation.assets[basename];
-        if (basename === this.entryName) {
+        if ((!this.entryName && ext === 'js') || (this.entryName && basename.indexOf(this.entryName))) {
           found = true;
-          console.log(`\n adding build info to ${this.entryName}...`);
+          console.log(`\n adding build info to ${basename}...`);
           this.createCodeInject((code) => {
             const newSource = code + asset.source();
             asset.source = () => newSource;
-            console.log('done\n');
+            console.log('done.\n');
             done();
           })
         }
