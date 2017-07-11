@@ -20,7 +20,9 @@
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
-    "git-last-commit": "^0.3.0",
     "moment": "^2.18.1"
+  },
+  "dependencies": {
+    "git-last-commit": "^0.3.0"
   }
 }
