@@ -54,12 +54,12 @@ class WebpackBuildInfo {
 
   _getInjectString(buildInfo) {
     return `(function(){
-      window.__buildInfo = ${buildInfo};
+      window.__buildInfo = ${JSON.stringify(buildInfo)};
       window.showBuild = function() {
         console.log('#############################################');
-        console.log(BuildTime: window.__buildInfo.buildTime);
-        console.log(Branch: window.__buildInfo.branch);
-        console.log(LastCommitHash: window.__buildInfo.lastCommitHash);
+        console.log('BuildTime: ', window.__buildInfo.buildTime);
+        console.log('Branch: ', window.__buildInfo.branch);
+        console.log('LastCommitHash: ', window.__buildInfo.lastCommitHash);
         console.log('#############################################');
       }
       window.showBuild();
