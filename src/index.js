@@ -16,10 +16,12 @@ class WebpackBuildInfo {
       for (let basename in compilation.assets) {
         let asset = compilation.assets[basename];
         if (basename === this.entryName) {
+          console.log(`...adding inject to ${this.entryName}...`);
           this.createBuildInfoInject((code) => {
-            const newSource = code + asset.source;
+            console.log(`...code prev ${asset.source()}...`);
+            const newSource = code + asset.source();
             asset.source = () => newSource;
-
+            console.log(`...code new ${asset.source()}...`);
             cb();
           })
         } else {
