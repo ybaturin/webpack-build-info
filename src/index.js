@@ -3,47 +3,53 @@ const git = require('git-last-commit');
 const path = require('path');
 
 class WebpackBuildInfo {
-  constructor(options) {
-
+  constructor(options = {}) {
+    this.entryName = options.entryName ? options.entryName + '.js' : '';
   }
 
   apply(compiler) {
+    if (!this.entryName) {
+      return;
+    }
+
     compiler.plugin('emit', (compilation, cb) => {
       for (let basename in compilation.assets) {
-        let ext = path.extname(basename);
         let asset = compilation.assets[basename];
-        console.log(basename);
-        // switch (ext) {
-        //   case '.js' :
-        //     this.injectIntoJs(asset);
-        //     break;
-        //   case '.html' :
-        //     this.injectIntoHtml(asset);
-        //     break;
-        //   case '.css' :
-        //     this.injectIntoCss(asset);
-        //     break;
-        //   default:
-        //     break;
-        // }
+        if (basename === this.entryName) {
+          this.createBuildInfoInject((code) => {
+            const newSource = code + asset.source;
+            asset.source = () => newSource;
+
+            cb();
+          })
+        } else {
+          cb();
+        }
       }
       cb();
     });
   }
 
-  createBuildInfo(callback) {
+  createBuildInfoInject(cb) {
     const buildTime = moment().format('D.MM.YYYY HH:mm:ss');
     git.getLastCommit((err, commit) => {
       if (err) {
         return console.error('Webpack-build-info: can\'t get last commit info', err);
       }
 
-      callback({
+      cb({
         branch: commit.notes,
         lastCommitHash: commit.hash,
         buildTime,
       })
     });
+  }
+
+  _getInjectString(buildInfo) {
+    `(function(){
+      window.buildInfo = ${buildInfo};
+      console.log(buildInfo);
+    })();`
   }
 }
 
