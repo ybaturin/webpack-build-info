@@ -10,4 +10,4 @@ class WebpackBuildInfo {
   }
 }
 
-export default WebpackBuildInfo;
+module.exports = WebpackBuildInfo;
