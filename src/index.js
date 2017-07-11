@@ -1,5 +1,6 @@
 const moment = require('moment');
 const git = require('git-last-commit');
+const path = require('path');
 
 class WebpackBuildInfo {
   constructor(options) {
@@ -7,10 +8,27 @@ class WebpackBuildInfo {
   }
 
   apply(compiler) {
-    // compiler.plugin('done', function() {
-    //   console.log('Hello World!');
-    // });
-    this.createBuildInfo((info) => console.log(info));
+    compiler.plugin('emit', (compilation, cb) => {
+      for (let basename in compilation.assets) {
+        let ext = path.extname(basename);
+        let asset = compilation.assets[basename];
+        console.log(basename);
+        // switch (ext) {
+        //   case '.js' :
+        //     this.injectIntoJs(asset);
+        //     break;
+        //   case '.html' :
+        //     this.injectIntoHtml(asset);
+        //     break;
+        //   case '.css' :
+        //     this.injectIntoCss(asset);
+        //     break;
+        //   default:
+        //     break;
+        // }
+      }
+      cb();
+    });
   }
 
   createBuildInfo(callback) {
@@ -21,8 +39,7 @@ class WebpackBuildInfo {
       }
 
       callback({
-        git: commit,
-        branch: commit.branch,
+        branch: commit.notes,
         lastCommitHash: commit.hash,
         buildTime,
       })
