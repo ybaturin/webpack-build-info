@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require('moment-timezone');
 const git = require('git-last-commit');
 const path = require('path');
 const fs = require('fs');
