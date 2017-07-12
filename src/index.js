@@ -9,7 +9,7 @@ class WebpackBuildInfo {
     this.entryName = options.entryName;
     this.disabled = options.disabled || false;
     this.packageJsonPath = options.packageJsonPath || './package.json';
-    this.buildRevisionPath = options.buildVersionPath || './build/buildRevision.txt';
+    this.buildRevisionPath = options.buildRevisionPath || './build/buildRevision.txt';
     this.needBuildRevision = options.needBuildRevision || false;
     this.version = null;
 
@@ -29,7 +29,7 @@ class WebpackBuildInfo {
 
   _incrementBuildRevision() {
     try {
-      const filePath = path.resolve(this.buildVersionPath);
+      const filePath = path.resolve(this.buildRevisionPath);
       let currentRevision;
       if (fs.existsSync(filePath)) {
         currentRevision = parseInt(fs.readFileSync(filePath, 'utf8'), 10) + 1;
