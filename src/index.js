@@ -74,7 +74,7 @@ class WebpackBuildInfo {
       window.showBuild = function() {
         console.log('%c--------------------------------------------------------------', 'color: grey');
         console.log('%cBuildTime: ' + '%c' + window.__buildInfo.buildTime, 'color: #444444', 'color: black');
-        console.log('c%Version: ' + '%c' + window.__buildInfo.version, 'color: #444444', 'color: black');
+        console.log('%cVersion: ' + '%c' + window.__buildInfo.version, 'color: #444444', 'color: black');
         console.log('%cBranch: ' + '%c' + window.__buildInfo.branch, 'color: #444444', 'color: black');
         console.log('%cLastCommitHash: ' + '%c' + window.__buildInfo.lastCommitHash, 'color: #444444', 'color: black');
         console.log('%c--------------------------------------------------------------', 'color: grey');
