@@ -8,7 +8,9 @@ class WebpackBuildInfo {
   constructor(options = {}) {
     this.entryName = options.entryName;
     this.disabled = options.disabled || false;
-    this.PACKAGE_JSON_PATH = this.PACKAGE_JSON_PATH || './package.json';
+    this.packageJsonPath = options.packageJsonPath || './package.json';
+    this.buildRevisionPath = options.buildVersionPath || './build/buildRevision.txt';
+    this.needBuildRevision = options.needBuildRevision || false;
     this.version = null;
 
     this._readVersion();
@@ -16,9 +18,30 @@ class WebpackBuildInfo {
 
   _readVersion() {
     let packageFile = JSON.parse(
-      fs.readFileSync(path.resolve(this.PACKAGE_JSON_PATH), 'utf8')
+      fs.readFileSync(path.resolve(this.packageJsonPath), 'utf8')
     );
     this.version = packageFile.version;
+    if (this.needBuildRevision) {
+      const revision = this._incrementBuildRevision();
+      this.version += `.${revision}`;
+    }
+  }
+
+  _incrementBuildRevision() {
+    try {
+      const filePath = path.resolve(this.buildVersionPath);
+      let currentRevision;
+      if (fs.existsSync(filePath)) {
+        currentRevision = parseInt(fs.readFileSync(filePath, 'utf8'), 10) + 1;
+      } else {
+        currentRevision = 1;
+      }
+      fs.writeFileSync(filePath, currentRevision, 'utf8');
+
+      return currentRevision;
+    } catch (error) {
+      return 0;
+    }
   }
 
   apply(compiler) {
