@@ -50,7 +50,7 @@ class WebpackBuildInfo {
   }
 
   createCodeInject(cb) {
-    const buildTime = moment().format('HH:mm:ss D-MMM-YYYY ');
+    const buildTime = moment().tz('Europe/Samara').format('HH:mm:ss D-MMM-YYYY ');
     git.getLastCommit((err, commit) => {
       if (err) {
         cb('');
@@ -73,7 +73,7 @@ class WebpackBuildInfo {
       window.__buildInfo = ${JSON.stringify(buildInfo)};
       window.showBuild = function() {
         console.log('%c--------------------------------------------------------------', 'color: grey');
-        console.log('%cBuildTime: ' + '%c' + window.__buildInfo.buildTime, 'color: #444444', 'color: black');
+        console.log('%cBuildTime: ' + '%c' + window.__buildInfo.buildTime + ' (Самара)', 'color: #444444', 'color: black');
         console.log('%cVersion: ' + '%c' + window.__buildInfo.version, 'color: #444444', 'color: black');
         console.log('%cBranch: ' + '%c' + window.__buildInfo.branch, 'color: #444444', 'color: black');
         console.log('%cLastCommitHash: ' + '%c' + window.__buildInfo.lastCommitHash, 'color: #444444', 'color: black');
