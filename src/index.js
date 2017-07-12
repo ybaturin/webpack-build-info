@@ -50,7 +50,7 @@ class WebpackBuildInfo {
   }
 
   createCodeInject(cb) {
-    const buildTime = moment().tz('Europe/Samara').format('HH:mm:ss D-MMM-YYYY ');
+    const buildTime = moment().tz('Europe/Samara').format('HH:mm:ss D-MMM-YYYY');
     git.getLastCommit((err, commit) => {
       if (err) {
         cb('');
