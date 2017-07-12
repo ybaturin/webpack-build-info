@@ -57,8 +57,10 @@ class WebpackBuildInfo {
         return console.error('Webpack-build-info: can\'t get last commit info', err);
       }
 
+      const branchName = commit.branch || commit.notes;
+
       const buildInfo = {
-        branch: commit.notes,
+        branch: branchName,
         lastCommitHash: commit.hash,
         version: this.version,
         buildTime,
