@@ -2,6 +2,8 @@ const moment = require('moment-timezone');
 const git = require('git-last-commit');
 const path = require('path');
 const fs = require('fs');
+const getGitBranchName = require('git-branch-name');
+
 moment.locale('ru');
 
 class WebpackBuildInfo {
@@ -80,16 +82,22 @@ class WebpackBuildInfo {
         return console.error('Webpack-build-info: can\'t get last commit info', err);
       }
 
-      const branchName = commit.branch || commit.notes;
+      getGitBranchName(__dirname, function(err, branchName) {
+        if (err) {
+          cb('');
+          return console.error('Webpack-build-info: can\'t get branch name', err);
+        }
 
-      const buildInfo = {
-        branch: branchName,
-        lastCommitHash: commit.hash,
-        version: this.version,
-        buildTime,
-      };
-      const result = this._getInjectString(buildInfo);
-      cb(result);
+        const buildInfo = {
+          branch: branchName,
+          lastCommitHash: commit.hash,
+          version: this.version,
+          buildTime,
+        };
+        const result = this._getInjectString(buildInfo);
+        cb(result);
+      });
+
     });
   }
 
