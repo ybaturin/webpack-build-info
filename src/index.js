@@ -82,7 +82,7 @@ class WebpackBuildInfo {
         return console.error('Webpack-build-info: can\'t get last commit info', err);
       }
 
-      getGitBranchName(__dirname, function(err, branchName) {
+      getGitBranchName(process.cwd(), function(err, branchName) {
         if (err) {
           cb('');
           return console.error('Webpack-build-info: can\'t get branch name', err);
