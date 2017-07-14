@@ -1,5 +1,5 @@
 const moment = require('moment-timezone');
-const git = require('git-last-commit');
+const getBranchName = require('current-git-branch');
 const path = require('path');
 const fs = require('fs');
 moment.locale('ru');
@@ -57,12 +57,13 @@ class WebpackBuildInfo {
         if ((!this.entryName && ext === 'js') || (this.entryName && basename.indexOf(this.entryName) !== -1)) {
           found = true;
           console.log(`\n adding build info to ${basename}...`);
-          this.createCodeInject((code) => {
-            const newSource = code + asset.source();
-            asset.source = () => newSource;
-            console.log('done.\n');
-            done();
-          })
+
+          const code = this.createCodeInject();
+          const newSource = code + asset.source();
+          asset.source = () => newSource;
+
+          console.log('done.\n');
+          done();
         }
       }
 
@@ -72,25 +73,16 @@ class WebpackBuildInfo {
     });
   }
 
-  createCodeInject(cb) {
+  createCodeInject() {
     const buildTime = moment().tz('Europe/Samara').format('HH:mm:ss D-MMM-YYYY');
-    git.getLastCommit((err, commit) => {
-      if (err) {
-        cb('');
-        return console.error('Webpack-build-info: can\'t get last commit info', err);
-      }
+    const branch = getBranchName();
 
-      const branchName = commit.branch || commit.notes;
-
-      const buildInfo = {
-        branch: branchName,
-        lastCommitHash: commit.hash,
-        version: this.version,
-        buildTime,
-      };
-      const result = this._getInjectString(buildInfo);
-      cb(result);
-    });
+    const buildInfo = {
+      version: this.version,
+      branch,
+      buildTime,
+    };
+    return this._getInjectString(buildInfo);
   }
 
   _getInjectString(buildInfo) {
@@ -101,7 +93,6 @@ class WebpackBuildInfo {
         console.log('%cBuildTime: ' + '%c' + window.__buildInfo.buildTime + ' (Самара)', 'color: #444444', 'color: black');
         console.log('%cVersion: ' + '%c' + window.__buildInfo.version, 'color: #444444', 'color: black');
         console.log('%cBranch: ' + '%c' + window.__buildInfo.branch, 'color: #444444', 'color: black');
-        console.log('%cLastCommitHash: ' + '%c' + window.__buildInfo.lastCommitHash, 'color: #444444', 'color: black');
         console.log('%c--------------------------------------------------------------', 'color: grey');
       }
       window.showBuild();
