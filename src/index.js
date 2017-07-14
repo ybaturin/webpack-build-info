@@ -1,7 +1,7 @@
 const moment = require('moment-timezone');
-const getBranchName = require('current-git-branch');
 const path = require('path');
 const fs = require('fs');
+import getBranchName from './get-branch-name';
 moment.locale('ru');
 
 class WebpackBuildInfo {

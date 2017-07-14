@@ -24,8 +24,8 @@
   },
   "dependencies": {
     "current-git-branch": "^1.0.0",
-    "git-branch-name": "^1.1.0",
-    "git-last-commit": "^0.3.0",
+    "execa": "^0.7.0",
+    "is-git-repository": "^1.1.1",
     "moment-timezone": "^0.5.13"
   }
 }
