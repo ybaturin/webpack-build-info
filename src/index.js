@@ -1,7 +1,7 @@
 const moment = require('moment-timezone');
 const path = require('path');
 const fs = require('fs');
-import getBranchName from './get-branch-name';
+import GitInfo from './git-info';
 moment.locale('ru');
 
 class WebpackBuildInfo {
@@ -75,11 +75,14 @@ class WebpackBuildInfo {
 
   createCodeInject() {
     const buildTime = moment().tz('Europe/Samara').format('HH:mm:ss D-MMM-YYYY');
-    const branch = getBranchName();
+    const gitInfoInst = new GitInfo();
+    const branch = gitInfoInst.getBranchName();
+    const lastCommitHash = gitInfoInst.getLastCommitHash();
 
     const buildInfo = {
       version: this.version,
       branch,
+      lastCommitHash,
       buildTime,
     };
     return this._getInjectString(buildInfo);
@@ -93,6 +96,7 @@ class WebpackBuildInfo {
         console.log('%cBuildTime: ' + '%c' + window.__buildInfo.buildTime + ' (Самара)', 'color: #444444', 'color: black');
         console.log('%cVersion: ' + '%c' + window.__buildInfo.version, 'color: #444444', 'color: black');
         console.log('%cBranch: ' + '%c' + window.__buildInfo.branch, 'color: #444444', 'color: black');
+        console.log('%cLastCommitHash: ' + '%c' + window.__buildInfo.lastCommitHash, 'color: #444444', 'color: black');
         console.log('%c--------------------------------------------------------------', 'color: grey');
       }
       window.showBuild();
