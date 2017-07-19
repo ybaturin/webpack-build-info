@@ -52,7 +52,7 @@ class WebpackBuildInfo {
     compiler.plugin('emit', (compilation, done) => {
       let found = false;
       for (let basename in compilation.assets) {
-        const ext = path.extname(basename);
+        const ext = basename.split('.').pop();
         let asset = compilation.assets[basename];
         if (ext === 'js' && (!this.entryName || (this.entryName && basename.indexOf(this.entryName) !== -1))) {
           found = true;
