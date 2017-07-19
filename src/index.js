@@ -54,7 +54,7 @@ class WebpackBuildInfo {
       for (let basename in compilation.assets) {
         const ext = path.extname(basename);
         let asset = compilation.assets[basename];
-        if ((!this.entryName && ext === 'js') || (this.entryName && basename.indexOf(this.entryName) !== -1)) {
+        if (ext === 'js' && (!this.entryName || (this.entryName && basename.indexOf(this.entryName) !== -1))) {
           found = true;
           console.log(`\n adding build info to ${basename}...`);
 
