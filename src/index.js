@@ -37,7 +37,7 @@ class WebpackBuildInfo {
           currentRevision = parseInt(revisionTxt);
         } else {
           const lastVersionArr = revisionTxt.split('.');
-          const lastVersionWithoutRevision = revisionTxt.slice(0, lastVersionArr.length - 1).join('.');
+          const lastVersionWithoutRevision = lastVersionArr.slice(0, lastVersionArr.length - 1).join('.');
 
           if (this.version === lastVersionWithoutRevision) {
             currentRevision = parseInt(lastVersionArr[3]);
