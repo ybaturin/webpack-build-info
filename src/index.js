@@ -20,28 +20,47 @@ class WebpackBuildInfo {
     let packageFile = JSON.parse(
       fs.readFileSync(path.resolve(this.packageJsonPath), 'utf8')
     );
-    this.version = packageFile.version;
+    this.version = this._getFullVersion(packageFile.version);
     if (this.needBuildRevision) {
-      const revision = this._incrementBuildRevision();
-      this.version += `.${revision}`;
+      this._incrementBuildRevision();
     }
   }
 
   _incrementBuildRevision() {
     try {
       const filePath = path.resolve(this.buildRevisionPath);
-      let currentRevision;
+      let currentRevision = 0;
       if (fs.existsSync(filePath)) {
-        currentRevision = parseInt(fs.readFileSync(filePath, 'utf8'), 10) + 1;
-      } else {
-        currentRevision = 1;
-      }
-      fs.writeFileSync(filePath, currentRevision, 'utf8');
+        const revisionTxt = fs.readFileSync(filePath, 'utf8');
+        // старая версия, когда хранился только номер ревизии
+        if (revisionTxt.indexOf('.') === -1) {
+          currentRevision = parseInt(revisionTxt);
+        } else {
+          const lastVersionArr = revisionTxt.split('.');
+          const lastVersionWithoutRevision = revisionTxt.slice(0, lastVersionArr.length - 1);
 
-      return currentRevision;
+          if (this.version === lastVersionWithoutRevision) {
+            currentRevision = parseInt(lastVersionArr[3]);
+          }
+        }
+      }
+      currentRevision += 1;
+      this.version = `${this.version}.${currentRevision}`;
+      fs.writeFileSync(filePath, this.version, 'utf8');
     } catch (error) {
       return 0;
     }
+  }
+
+  _getFullVersion(version) {
+    const versionArr = version.split('.');
+    if (versionArr.length < 3) {
+      for(let i = versionArr.length; i < 3; i++) {
+        versionArr.push(0);
+      }
+    }
+
+    return versionArr.join('.');
   }
 
   apply(compiler) {
